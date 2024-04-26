@@ -9,11 +9,12 @@ import img7 from "../assets/pexels-photo-3163994.webp"
 import img8 from "../assets/wallpaperflare.com_wallpaper (1).jpg"
 import img9 from "../assets/wallpaperflare.com_wallpaper.jpg"
 import img10 from "../assets/wallpaperflare.com_wallpaper.jpg"
+import Logo from "../assets/mirrorlogo.jpg"
 
 const Carousel = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10];
-  const [carouselHeight, setCarouselHeight] = useState("600px"); // Initial height
+  const [carouselHeight, setCarouselHeight] = useState("700px"); // Initial height
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -22,32 +23,36 @@ const Carousel = () => {
       );
     }, 3000);
     
-    // Dynamically adjust the carousel height based on the window width
-    const handleResize = () => {
-      const windowWidth = window.innerWidth;
-      // Adjust height based on window width
-      if (windowWidth <= 320) {
-        setCarouselHeight("300px"); // Adjust height for smaller screens like iPhone SE
-      } else {
-        setCarouselHeight("600px"); // Default height for larger screens
-      }
-    };
-
-    // Call handleResize initially and add event listener for window resize
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup function to remove event listener
-    return () => window.removeEventListener("resize", handleResize);
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <div className="w-full overflow-hidden" style={{ height: carouselHeight }}>
-      <img
-        src={images[currentImageIndex]}
-        alt={`Slide ${currentImageIndex}`}
-        className="w-full h-[600px] object-cover"
-      />
+    <div className="relative">
+      <nav className="bg-transparent p-4 absolute top-0 left-0 right-0 z-10 flex justify-around items-center ">
+        <div className="flex space-x-20 ml-20 mt-5">
+          <a href="#" className="text-white hover:text-gray-300">Home</a>
+          <a href="#" className="text-white hover:text-gray-300">About</a>
+          <a href="#" className="text-white hover:text-gray-300">Services</a>
+          <a href="/" className="flex items-center">
+            <img src={Logo} alt="Logo" className="h-8" />
+          </a>
+          <a href="#" className="text-white hover:text-gray-300">Portfolio</a>
+          <a href="#" className="text-white hover:text-gray-300">Get Appointment</a>
+          <a href="#" className="text-white hover:text-gray-300">After Care</a>
+        </div>
+      </nav>
+      <div className="w-full overflow-hidden relative" style={{ height: carouselHeight }}>
+        {images.map((image, index) => (
+          <img
+            key={index}
+            src={image}
+            alt={`Slide ${index}`}
+            className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-3000 ${
+              index === currentImageIndex ? 'opacity-60' : 'opacity-0'
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
